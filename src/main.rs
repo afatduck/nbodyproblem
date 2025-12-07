@@ -1,10 +1,10 @@
-use macroquad::prelude::*;
+use macroquad::{prelude::*, ui::{Skin, root_ui}};
 
-use crate::body::{BodyVec};
+use crate::{simulation::Simulation, styles::{create_button_style, set_app_style}};
 
 pub mod body;
-
-pub const DT: f32 = 2e-3;
+pub mod simulation;
+pub mod styles;
 
 #[macroquad::main(window_conf)]
 async fn main() {
@@ -33,20 +33,17 @@ async fn main() {
         radius: 12.
     };
 
-    let mut bodies = Vec::from([body1, body2, body3]);
-    let mut acc = 0.0;
+    set_app_style().await;
 
-    bodies.leapfrog();
+    let mut simulation = Simulation::new();
+    simulation.speed = 30.0;
+    simulation.add_body(body1);
+    simulation.add_body(body2);
+    simulation.add_body(body3);
 
     loop {
-        acc += get_frame_time();
-        while acc > DT {
-            acc -= DT;
-            bodies.update();
-        }
-
-        bodies.draw();
-
+        simulation.draw();
+        simulation.update(get_frame_time());
         next_frame().await; // Wait for next frame
     }
 }
