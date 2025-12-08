@@ -9,7 +9,8 @@ pub struct Body {
 }
 
 impl Body {
-    pub fn draw(&self) {
-        draw_circle(self.position.x, self.position.y, self.radius, Color::from_hex(0x225588));
+    pub fn draw(&self, translate: &Vec2) {
+        let translated_pos = self.position + *translate;
+        draw_circle(translated_pos.x, translated_pos.y, self.radius, Color::from_hex(0x225588));
     }
 }

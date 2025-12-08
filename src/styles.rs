@@ -1,6 +1,6 @@
-use macroquad::{color::{Color, WHITE}, file::load_file, math::RectOffset, text::{Font, load_ttf_font}, texture::Image, ui::{Skin, Style, root_ui}};
+use macroquad::{color::{Color, WHITE}, file::load_file, math::RectOffset, texture::Image, ui::{Skin, Style, root_ui}};
 
-trait ColorToImage {
+pub trait ColorToImage {
     fn to_image(self) -> Image;
 }
 
@@ -30,9 +30,9 @@ pub fn create_button_style(font: &[u8]) -> Style {
         .background_hovered(hovered.to_image())
         .background_clicked(clicked.to_image())
         .text_color(text_color)
-        .font_size(28)
+        .font_size(16)
         .font(font).unwrap()
-        .margin(RectOffset::new(20.0, 20.0, 10.0, 10.0))
+        .margin(RectOffset::new(10.0, 10.0, 5.0, 5.0))
         .background_margin(RectOffset::new(8.0, 8.0, 8.0, 8.0))
         .build()
 }

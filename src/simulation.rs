@@ -1,13 +1,18 @@
+use macroquad::math::Vec2;
+
 use crate::{body::Body, simulation::{collisions::CollisionSimulation, gravity::GravitySimulation, ui::SimulationUI}};
 
 pub mod gravity;
 pub mod collisions;
 pub mod ui;
+pub mod frame_move;
 
 pub struct Simulation {
     _running: bool, 
     _bodies: Vec<Body>,
     _time: f32,
+    _position: Vec2,
+    _drag_start_position: Option<Vec2>,
 
     pub speed: f32,
     pub gravity: f32,
@@ -22,6 +27,8 @@ impl Simulation {
             _running: false,
             _bodies: Vec::new(),
             _time: 0.0,
+            _position: Vec2::ZERO,
+            _drag_start_position: None,
             speed: 1.0,
             gravity: 1.0,
             restitution: 1.0
@@ -40,7 +47,7 @@ impl Simulation {
 
     pub fn draw(&self) {
         for body in &self._bodies {
-            body.draw();
+            body.draw(&self._position);
         }
     }
 

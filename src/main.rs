@@ -1,6 +1,6 @@
-use macroquad::{prelude::*, ui::{Skin, root_ui}};
+use macroquad::prelude::*;
 
-use crate::{simulation::Simulation, styles::{create_button_style, set_app_style}};
+use crate::{simulation::{Simulation, frame_move::SimulationFrameMove}, styles::set_app_style};
 
 pub mod body;
 pub mod simulation;
@@ -42,6 +42,7 @@ async fn main() {
     simulation.add_body(body3);
 
     loop {
+        simulation.handle_frame_move();
         simulation.draw();
         simulation.update(get_frame_time());
         next_frame().await; // Wait for next frame
@@ -52,7 +53,7 @@ fn window_conf() -> Conf {
     Conf {
         fullscreen: false,
         high_dpi: true,
-        sample_count: 1,
+        sample_count: 16,
         window_title: "N Body Problem".into(),
         window_width: 1920,
         window_height: 1080,
