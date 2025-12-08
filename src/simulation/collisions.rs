@@ -1,11 +1,7 @@
 use crate::simulation::Simulation;
 
-pub trait CollisionSimulation {
-    fn resolve_collisions(&mut self);
-}
-
-impl CollisionSimulation for Simulation {
-    fn resolve_collisions(&mut self) {
+impl Simulation {
+    pub fn resolve_collisions(&mut self) {
         let len = self._bodies.len();
         for i in 0..len-1 {
             for j in i+1..len {
@@ -25,7 +21,7 @@ impl CollisionSimulation for Simulation {
 
                     let relative_velocity = body_a.velocity - body_b.velocity;
                     let normal_component = relative_velocity.dot(collision_normal);
-                    let impulse_magnitude = - ((1.0 + self.restitution) * normal_component) / ((1.0 / body_a.mass) + (1.0 / body_b.mass));
+                    let impulse_magnitude = - ((1.0 + self._restitution) * normal_component) / ((1.0 / body_a.mass) + (1.0 / body_b.mass));
                     let new_velocity_a = body_a.velocity + collision_normal * impulse_magnitude / body_a.mass;
                     let new_velocity_b = body_b.velocity - collision_normal * impulse_magnitude / body_b.mass;
 

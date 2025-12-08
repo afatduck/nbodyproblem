@@ -6,12 +6,8 @@ static BUTTON_WIDTH: f32 = 80.0;
 static BUTTON_HEIGHT: f32 = 30.0;
 static MARGIN: f32 = 20.0;
 
-pub trait SimulationUIStartStop {
-    fn draw_start_stop_button(&mut self);
-}
-
-impl SimulationUIStartStop for Simulation {
-    fn draw_start_stop_button(&mut self) {
+impl Simulation {
+    pub fn draw_start_stop_button(&mut self) {
 
         let button_x = screen_width() - BUTTON_WIDTH - MARGIN;
         let button_y = screen_height() - BUTTON_HEIGHT - MARGIN;

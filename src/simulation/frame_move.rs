@@ -2,12 +2,8 @@ use macroquad::{input::{MouseButton, is_mouse_button_down, is_mouse_button_press
 
 use crate::simulation::Simulation;
 
-pub trait SimulationFrameMove {
-    fn handle_frame_move(&mut self);
-}
-
-impl SimulationFrameMove for Simulation {
-    fn handle_frame_move(&mut self) {
+impl Simulation {
+    pub fn handle_frame_move(&mut self) {
         if is_mouse_button_pressed(MouseButton::Middle) {
             self._drag_start_position = Some(mouse_position().into());  
         }

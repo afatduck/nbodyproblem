@@ -1,11 +1,12 @@
 use macroquad::math::Vec2;
 
-use crate::{body::Body, simulation::{collisions::CollisionSimulation, gravity::GravitySimulation, ui::SimulationUI}};
+use crate::{body::Body};
 
 pub mod gravity;
 pub mod collisions;
 pub mod ui;
 pub mod frame_move;
+mod select;
 
 pub struct Simulation {
     _running: bool, 
@@ -13,10 +14,10 @@ pub struct Simulation {
     _time: f32,
     _position: Vec2,
     _drag_start_position: Option<Vec2>,
-
-    pub speed: f32,
-    pub gravity: f32,
-    pub restitution: f32
+    _selected: Option<usize>,
+    _speed: f32,
+    _gravity: f32,
+    _restitution: f32
 }
 
 impl Simulation {
@@ -29,9 +30,11 @@ impl Simulation {
             _time: 0.0,
             _position: Vec2::ZERO,
             _drag_start_position: None,
-            speed: 1.0,
-            gravity: 1.0,
-            restitution: 1.0
+            _selected: None,
+
+            _speed: 1.0,
+            _gravity: 1.0,
+            _restitution: 1.0
         }
     }
 
@@ -46,14 +49,17 @@ impl Simulation {
     }
 
     pub fn draw(&self) {
-        for body in &self._bodies {
-            body.draw(&self._position);
+        for i in 0..self._bodies.len() {
+            self._bodies[i].draw(
+                &self._position, 
+                &self._selected.unwrap_or(usize::MAX) == &i
+            );
         }
     }
 
     pub fn update(&mut self, frame_time: f32) {
         if self._running {
-            self._time += frame_time * self.speed;
+            self._time += frame_time * self._speed;
             while self._time >= Self::DT {
                 self._time -= Self::DT;
                 self.update_bodies();

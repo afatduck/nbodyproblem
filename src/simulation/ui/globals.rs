@@ -9,12 +9,8 @@ static MAX_GRAVITY: f32 = 10.0;
 static MIN_RESTITUTION: f32 = 0.0;
 static MAX_RESTITUTION: f32 = 1.0;
 
-pub trait SimulationUIGlobals {
-    fn draw_global_sliders(&mut self);
-}
-
-impl SimulationUIGlobals for Simulation {
-    fn draw_global_sliders(&mut self) {
+impl Simulation {
+    pub fn draw_global_sliders(&mut self) {
         root_ui().window(hash!(), vec2(screen_width() - 220.0, 20.0), vec2(200.0, 140.0), |ui| {
             ui.label(None, "Simulation Speed");
 
@@ -22,7 +18,7 @@ impl SimulationUIGlobals for Simulation {
                 hash!(), 
                 "Speed", 
                 MIN_SPEED..MAX_SPEED, 
-                &mut self.speed
+                &mut self._speed
             );
 
             ui.label(None, "Gravitational Pull");
@@ -30,7 +26,7 @@ impl SimulationUIGlobals for Simulation {
                 hash!(), 
                 "Gravity", 
                 MIN_GRAVITY..MAX_GRAVITY, 
-                &mut self.gravity
+                &mut self._gravity
             );
 
             ui.label(None, "Restitution Coeficient");
@@ -38,7 +34,7 @@ impl SimulationUIGlobals for Simulation {
                 hash!(), 
                 "Restitution", 
                 MIN_RESTITUTION..MAX_RESTITUTION, 
-                &mut self.restitution
+                &mut self._restitution
             );
         });
     }
