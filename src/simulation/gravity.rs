@@ -1,11 +1,14 @@
-use macroquad::math::Vec2;
+use macroquad::{math::{Vec2, vec2}, window::{screen_height, screen_width}};
 
 use crate::{body::Body, simulation::Simulation};
 
 impl Simulation {
     pub fn grav_update_positions(&mut self) {
-        for body in &mut self._bodies {
+        for (i, body) in &mut self._bodies.iter_mut().enumerate() {
             body.position += body.velocity * Self::DT;
+            if Some(i) == self._camera_lock {
+                self._position = -body.position + vec2(screen_width() * 0.5, screen_height() * 0.5);
+            }
         }
     }
 

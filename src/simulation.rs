@@ -15,6 +15,8 @@ pub struct Simulation {
     _position: Vec2,
     _drag_start_position: Option<Vec2>,
     _selected: Option<usize>,
+    _camera_lock: Option<usize>,
+    _click_handled: bool,
     _speed: f32,
     _gravity: f32,
     _restitution: f32
@@ -31,7 +33,8 @@ impl Simulation {
             _position: Vec2::ZERO,
             _drag_start_position: None,
             _selected: None,
-
+            _camera_lock: None,
+            _click_handled: false,
             _speed: 1.0,
             _gravity: 1.0,
             _restitution: 1.0
@@ -40,6 +43,12 @@ impl Simulation {
 
     pub fn add_body(&mut self, body: Body) {
         self._bodies.push(body);
+    }
+
+    pub fn remove_body(&mut self, index: usize) {
+        self._selected = None;
+        self._camera_lock = None;
+        self._bodies.remove(index);
     }
 
     fn update_bodies(&mut self) {
@@ -57,7 +66,15 @@ impl Simulation {
         }
     }
 
-    pub fn update(&mut self, frame_time: f32) {
+    pub fn frame_update(&mut self, frame_time: f32) {
+        self._click_handled = false;
+        self.handle_frame_move();
+        self.draw();
+        self.update(frame_time);
+        self.handle_select();
+    }
+
+    fn update(&mut self, frame_time: f32) {
         if self._running {
             self._time += frame_time * self._speed;
             while self._time >= Self::DT {

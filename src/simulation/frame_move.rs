@@ -10,7 +10,7 @@ impl Simulation {
         if is_mouse_button_released(MouseButton::Middle) {
             self._drag_start_position = None;
         }
-        if is_mouse_button_down(MouseButton::Middle) {
+        if is_mouse_button_down(MouseButton::Middle) && self._camera_lock == None {
             if let Some(last_pos) = self._drag_start_position {
                 let mouse_pos: Vec2 = mouse_position().into();
                 let delta = mouse_pos - last_pos;

@@ -42,10 +42,7 @@ async fn main() {
     simulation.add_body(body3);
 
     loop {
-        simulation.handle_frame_move();
-        simulation.handle_select();
-        simulation.draw();
-        simulation.update(get_frame_time());
+        simulation.frame_update(get_frame_time());
         next_frame().await; // Wait for next frame
     }
 }

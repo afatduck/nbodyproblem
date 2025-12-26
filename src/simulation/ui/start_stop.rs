@@ -17,11 +17,13 @@ impl Simulation {
         if self._running {
             if root_ui().button(Some(button_position), "Stop ") {
                 self.stop();
+                self.stop_mouse_propagation();
             }
             return;
         }
         if root_ui().button(Some(button_position), "Start") {
             self.start();
+            self.stop_mouse_propagation();
         }
 
     }

@@ -4,12 +4,13 @@ use crate::simulation::Simulation;
 
 impl Simulation {
     pub fn handle_select(&mut self) {
-        if is_mouse_button_pressed(MouseButton::Left) {
+        if is_mouse_button_pressed(MouseButton::Left) && !self._click_handled {
             let mouse_pos: Vec2 = mouse_position().into();
+            let rel_mouse_pos = mouse_pos - self._position;
             for i in 0..self._bodies.len() {
                 if {
                     let body = &self._bodies[i];
-                    body.radius.powi(2) >= body.position.distance_squared(mouse_pos)
+                    body.radius.powi(2) >= body.position.distance_squared(rel_mouse_pos)
                 } {
                     self._selected = Some(i);
                     break;
@@ -17,5 +18,9 @@ impl Simulation {
                 self._selected = None;
             }
         }  
+    }
+
+    pub fn select_last(&mut self) {
+        self._selected = Some(self._bodies.len() - 1);
     }
 }
