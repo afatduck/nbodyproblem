@@ -1,4 +1,4 @@
-use macroquad::{math::{Vec2, vec2}, window::{screen_height, screen_width}};
+use macroquad::math::Vec2;
 
 use crate::{body::Body, simulation::Simulation};
 
@@ -7,7 +7,7 @@ impl Simulation {
         for (i, body) in &mut self._bodies.iter_mut().enumerate() {
             body.position += body.velocity * Self::DT;
             if Some(i) == self._camera_lock {
-                self._position = -body.position + vec2(screen_width() * 0.5, screen_height() * 0.5);
+                self._camera.target = body.position;
             }
         }
     }

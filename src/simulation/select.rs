@@ -6,7 +6,7 @@ impl Simulation {
     pub fn handle_select(&mut self) {
         if is_mouse_button_pressed(MouseButton::Left) && !self._click_handled {
             let mouse_pos: Vec2 = mouse_position().into();
-            let rel_mouse_pos = mouse_pos - self._position;
+            let rel_mouse_pos = self._camera.screen_to_world(mouse_pos);
             for i in 0..self._bodies.len() {
                 if {
                     let body = &self._bodies[i];

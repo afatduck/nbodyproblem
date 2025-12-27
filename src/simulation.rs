@@ -1,6 +1,6 @@
-use macroquad::math::Vec2;
+use macroquad::{camera::{Camera2D, set_camera, set_default_camera}, math::{Rect, Vec2}, window::{screen_height, screen_width}};
 
-use crate::{body::Body};
+use crate::{body::Body, simulation::frame_move::ScaleInterpolation};
 
 pub mod gravity;
 pub mod collisions;
@@ -12,8 +12,9 @@ pub struct Simulation {
     _running: bool, 
     _bodies: Vec<Body>,
     _time: f32,
-    _position: Vec2,
+    _camera: Camera2D,
     _drag_start_position: Option<Vec2>,
+    _scale_interpolation: Option<ScaleInterpolation>,
     _selected: Option<usize>,
     _camera_lock: Option<usize>,
     _click_handled: bool,
@@ -26,11 +27,21 @@ impl Simulation {
     pub const DT: f32 = 2e-3;
 
     pub fn new() -> Self {
+        let camera = Camera2D::from_display_rect(
+                Rect::new(
+                    0.0, 
+                    0.0, 
+                    screen_width(), 
+                    screen_height()
+                )
+            );
+
         Self { 
             _running: false,
             _bodies: Vec::new(),
             _time: 0.0,
-            _position: Vec2::ZERO,
+            _camera: camera,
+            _scale_interpolation: None,
             _drag_start_position: None,
             _selected: None,
             _camera_lock: None,
@@ -60,7 +71,6 @@ impl Simulation {
     pub fn draw(&self) {
         for i in 0..self._bodies.len() {
             self._bodies[i].draw(
-                &self._position, 
                 &self._selected.unwrap_or(usize::MAX) == &i
             );
         }
@@ -68,8 +78,10 @@ impl Simulation {
 
     pub fn frame_update(&mut self, frame_time: f32) {
         self._click_handled = false;
-        self.handle_frame_move();
+        self.handle_frame_move(frame_time);
+        set_camera(&self._camera);
         self.draw();
+        set_default_camera();
         self.update(frame_time);
         self.handle_select();
     }

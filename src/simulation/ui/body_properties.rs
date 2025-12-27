@@ -1,5 +1,5 @@
 
-use macroquad::{math::vec2, ui::{hash, root_ui}, window::{screen_height, screen_width}};
+use macroquad::{math::vec2, ui::{hash, root_ui}, window::{screen_height}};
 
 use crate::simulation::Simulation;
 
@@ -72,7 +72,7 @@ impl Simulation {
                 ui.checkbox(body_index.try_into().unwrap(), "Lock camera", &mut locked);
                 if locked != prev_locked {
                     self._camera_lock = if locked {
-                        self._position = -body.position + vec2(screen_width() * 0.5, screen_height() * 0.5);
+                        self._camera.target = body.position;
                         Some(body_index)
                     } else { None };
                 }
