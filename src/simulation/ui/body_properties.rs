@@ -77,15 +77,17 @@ impl Simulation {
                     } else { None };
                 }
 
-                let skin = ui.default_skin();
-                ui.pop_skin();
-                ui.same_line(240.0);
-                if ui.button(vec2(0.0, 0.0), "Remove") {
-                    self.remove_body(body_index);
+                if !self._running {
+                    let skin = ui.default_skin();
+                    ui.pop_skin();
+                    ui.same_line(240.0);
+                    if ui.button(vec2(0.0, 0.0), "Remove") {
+                        self.remove_body(body_index);
+                        ui.push_skin(&skin);
+                        return;
+                    }
                     ui.push_skin(&skin);
-                    return;
                 }
-                ui.push_skin(&skin);
 
                 if self._running { return; }
 

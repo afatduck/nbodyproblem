@@ -1,12 +1,33 @@
-use crate::simulation::Simulation;
+use crate::{body::Body};
 
-impl Simulation {
-    pub fn resolve_collisions(&mut self) {
-        let len = self._bodies.len();
+pub trait CollsisionSimulation {
+    fn collisions_exist(&self) -> bool;
+    fn resolve_collisions(&mut self, restitution: f32);
+}
+
+impl CollsisionSimulation for Vec<Body> {
+    fn collisions_exist(&self) -> bool {
+        let len = self.len();
         for i in 0..len-1 {
             for j in i+1..len {
-                let body_a = &self._bodies[i];
-                let body_b = &self._bodies[j];
+                let body_a = &self[i];
+                let body_b = &self[j];
+
+                let distance = body_a.position.distance(body_b.position);
+                if  body_a.radius + body_b.radius > distance {
+                    return  true;
+                }
+            }
+        }
+        false
+    }
+
+    fn resolve_collisions(&mut self, restitution: f32) {
+        let len = self.len();
+        for i in 0..len-1 {
+            for j in i+1..len {
+                let body_a = &self[i];
+                let body_b = &self[j];
 
                 let distance = body_a.position.distance(body_b.position);
                 let penetration_depth = body_a.radius + body_b.radius - distance;
@@ -21,14 +42,14 @@ impl Simulation {
 
                     let relative_velocity = body_a.velocity - body_b.velocity;
                     let normal_component = relative_velocity.dot(collision_normal);
-                    let impulse_magnitude = - ((1.0 + self._restitution) * normal_component) / ((1.0 / body_a.mass) + (1.0 / body_b.mass));
+                    let impulse_magnitude = - ((1.0 + restitution) * normal_component) / ((1.0 / body_a.mass) + (1.0 / body_b.mass));
                     let new_velocity_a = body_a.velocity + collision_normal * impulse_magnitude / body_a.mass;
                     let new_velocity_b = body_b.velocity - collision_normal * impulse_magnitude / body_b.mass;
 
-                    self._bodies[i].position = new_position_a;
-                    self._bodies[j].position = new_position_b;
-                    self._bodies[i].velocity = new_velocity_a;
-                    self._bodies[j].velocity = new_velocity_b;
+                    self[i].position = new_position_a;
+                    self[j].position = new_position_b;
+                    self[i].velocity = new_velocity_a;
+                    self[j].velocity = new_velocity_b;
 
                 }        
 

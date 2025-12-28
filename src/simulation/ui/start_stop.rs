@@ -1,6 +1,6 @@
 use macroquad::{prelude::*, ui::{root_ui}};
 
-use crate::simulation::Simulation;
+use crate::simulation::{Simulation, collisions::CollsisionSimulation};
 
 static BUTTON_WIDTH: f32 = 80.0;
 static BUTTON_HEIGHT: f32 = 30.0;
@@ -21,6 +21,11 @@ impl Simulation {
             }
             return;
         }
+
+        if self._bodies.collisions_exist() {
+            return;
+        }
+
         if root_ui().button(Some(button_position), "Start") {
             self.start();
             self.stop_mouse_propagation();

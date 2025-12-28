@@ -1,7 +1,7 @@
 use macroquad::{color::Color, math::{Vec2, vec2}, shapes::{draw_circle, draw_triangle}, window::{screen_height, screen_width}};
 
-static COLOR_NORMAL: u32 = 0x225588;
-static COLOR_SELECTED: u32 = 0xaa5560;
+pub static COLOR_NORMAL: u32 = 0x225588;
+pub static COLOR_SELECTED: u32 = 0xaa5560;
 static ARROW_DISTANCE_TO_RADIUS: f32 = 1.3;
 static RADIUS_MULTIPLIER: f32 = 5e-2;
 static ARROW_WIDTH_TO_RADIUS: f32 = 12.0 * RADIUS_MULTIPLIER;
@@ -11,8 +11,18 @@ static ARROW_HEIGHT_TO_RADIUS: f32 = 8.0 * RADIUS_MULTIPLIER;
 pub struct Body {
     pub position: Vec2,
     pub velocity: Vec2,
+    pub acceleration: Vec2,
     pub mass: f32,
     pub radius: f32,
+}
+
+impl std::hash::Hash for Body {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        (self.position.x.to_bits(), self.position.y.to_bits()).hash(state);
+        (self.velocity.x.to_bits(), self.velocity.y.to_bits()).hash(state);
+        self.mass.to_bits().hash(state);
+        self.radius.to_bits().hash(state);
+    }
 }
 
 impl Body {
@@ -44,7 +54,8 @@ impl Default for Body {
     fn default() -> Self {
         Self { 
             position: vec2(screen_width() / 2.0, screen_height() / 2.0), 
-            velocity: Default::default(), 
+            velocity: Default::default(),
+            acceleration: Vec2::ZERO,
             mass: 1e2, 
             radius: 5e1
         }

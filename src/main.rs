@@ -11,27 +11,27 @@ pub mod styles;
 async fn main() {
 
     let body1 = body::Body {
-        position: Vec2 { x: 110., y: 110. },
-        velocity: Vec2 { x: 0., y: 10. },
-        // acceleration: Vec2::ZERO,
-        mass: 15.0,
+        position: Vec2 { x: 250., y: 350. },
+        velocity: Vec2 { x: 0., y: 45. },
+        acceleration: Vec2::ZERO,
+        mass: 20.0,
         radius: 20.0
     };
 
     let body2 = body::Body {
-        position: Vec2 { x: 500., y: 300. },
+        position: Vec2 { x: 600., y: 350. },
         velocity: Vec2 { x: 0.0, y: 0.0 },
-        // acceleration: Vec2::ZERO,
-        mass: 100.0,
+        acceleration: Vec2::ZERO,
+        mass: 2000.0,
         radius: 50.
     };
 
     let body3 = body::Body {
-        position: Vec2 { x: 800., y: 300. },
-        velocity: Vec2 { x: 0., y: -6. },
-        // acceleration: Vec2::ZERO,
-        mass: 20.0,
-        radius: 12.
+        position: Vec2 { x: 600., y: 450. },
+        velocity: Vec2 { x: 50., y: 0. },
+        acceleration: Vec2::ZERO,
+        mass: 5.0,
+        radius: 8.0
     };
 
     set_app_style().await;
@@ -53,8 +53,8 @@ fn window_conf() -> Conf {
         high_dpi: true,
         sample_count: 16,
         window_title: "N Body Problem".into(),
-        window_width: 1920,
-        window_height: 1080,
+        window_width: 1600,
+        window_height: 900,
         icon: None,
         window_resizable: false,
         platform: Default::default()
