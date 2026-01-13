@@ -2,6 +2,8 @@ use macroquad::math::Vec2;
 
 use crate::{body::Body};
 
+static G: f32 = 1e2;
+
 pub trait GravitySimulation {
     fn grav_update_positions(&mut self, dt: f32);
 
@@ -30,8 +32,7 @@ impl GravitySimulation for Vec<Body> {
         let mut aggregated_acceleration = Vec2::ZERO;
         for other in self {
             if std::ptr::eq(body, other) { continue; }
-            // We excluse self.mass from the equation as it would have to be later devided anyways.
-            let force = gravity * other.mass / body.position.distance(other.position);
+            let force = G * gravity * other.mass / body.position.distance_squared(other.position);
             let acceleration = (other.position - body.position).normalize() * force;
             aggregated_acceleration += acceleration;
         }

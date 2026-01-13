@@ -12,7 +12,7 @@ async fn main() {
 
     let body1 = body::Body {
         position: Vec2 { x: 250., y: 350. },
-        velocity: Vec2 { x: 0., y: 45. },
+        velocity: Vec2 { x: 0., y: 25. },
         acceleration: Vec2::ZERO,
         mass: 20.0,
         radius: 20.0
@@ -43,7 +43,7 @@ async fn main() {
 
     loop {
         simulation.frame_update(get_frame_time());
-        next_frame().await; // Wait for next frame
+        next_frame().await;
     }
 }
 
