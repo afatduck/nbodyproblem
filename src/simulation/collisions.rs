@@ -2,7 +2,7 @@ use crate::{body::Body};
 
 pub trait CollsisionSimulation {
     fn collisions_exist(&self) -> bool;
-    fn resolve_collisions(&mut self, restitution: f32);
+    fn resolve_collisions(&mut self);
 }
 
 impl CollsisionSimulation for Vec<Body> {
@@ -22,7 +22,7 @@ impl CollsisionSimulation for Vec<Body> {
         false
     }
 
-    fn resolve_collisions(&mut self, restitution: f32) {
+    fn resolve_collisions(&mut self) {
         let len = self.len();
         for i in 0..len-1 {
             for j in i+1..len {
@@ -42,9 +42,11 @@ impl CollsisionSimulation for Vec<Body> {
 
                     let relative_velocity = body_a.velocity - body_b.velocity;
                     let normal_component = relative_velocity.dot(collision_normal);
-                    let impulse_magnitude = - ((1.0 + restitution) * normal_component) / ((1.0 / body_a.mass) + (1.0 / body_b.mass));
-                    let new_velocity_a = body_a.velocity + collision_normal * impulse_magnitude / body_a.mass;
-                    let new_velocity_b = body_b.velocity - collision_normal * impulse_magnitude / body_b.mass;
+                    let mass_component = (1.0 / body_a.mass) + (1.0 / body_b.mass);
+                    let impulse_magnitude_a = - ((1.0 + body_a.restitution) * normal_component) / mass_component;
+                    let impulse_magnitude_b = - ((1.0 + body_a.restitution) * normal_component) / mass_component;
+                    let new_velocity_a = body_a.velocity + collision_normal * impulse_magnitude_a / body_a.mass;
+                    let new_velocity_b = body_b.velocity - collision_normal * impulse_magnitude_b / body_b.mass;
 
                     self[i].position = new_position_a;
                     self[j].position = new_position_b;

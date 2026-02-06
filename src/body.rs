@@ -18,6 +18,7 @@ pub struct Body {
     pub mass: f32,
     pub radius: f32,
     pub name: String,
+    pub restitution: f32
 }
 
 impl std::hash::Hash for Body {
@@ -26,6 +27,7 @@ impl std::hash::Hash for Body {
         (self.velocity.x.to_bits(), self.velocity.y.to_bits()).hash(state);
         self.mass.to_bits().hash(state);
         self.radius.to_bits().hash(state);
+        self.restitution.to_bits().hash(state);
     }
 }
 
@@ -72,7 +74,8 @@ impl Default for Body {
             acceleration: Vec2::ZERO,
             mass: 1e2, 
             radius: 5e1,
-            name: String::from("untitled body")
+            name: String::from("untitled body"),
+            restitution: 1.
         }
     }
 }

@@ -5,7 +5,7 @@ use crate::simulation::Simulation;
 
 static MARGIN: f32 = 20.0;
 static WIDTH: f32 = 300.0;
-static HEIGHT: f32 = 250.0;
+static HEIGHT: f32 = 305.0;
 
 impl Simulation {
     pub fn draw_body_properties(&mut self) {
@@ -65,6 +65,16 @@ impl Simulation {
                 ui.label(None, "R: ");
                 ui.same_line(WIDTH / 2.0 + 20.0);
                 ui.editbox(hash!(), vec2(115.0, 30.0), &mut radius);
+
+                ui.separator();
+                ui.label(None, "Restitution");
+                ui.slider(
+                    hash!(), 
+                    "Restitution", 
+                    0.0..1.0, 
+                    &mut body.restitution
+                );
+                ui.separator();
 
                 ui.separator();
                 ui.separator();

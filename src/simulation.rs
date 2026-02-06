@@ -27,7 +27,6 @@ pub struct Simulation {
     _click_handled: bool,
     _speed: f32,
     _gravity: f32,
-    _restitution: f32,
     _trajectory_visibility: TrajectoryVisibility,
     _show_names: bool
 }
@@ -61,7 +60,6 @@ impl Simulation {
             _click_handled: false,
             _speed: 1.0,
             _gravity: 1.0,
-            _restitution: 1.0,
             _trajectory_visibility: TrajectoryVisibility::SELECTED,
             _show_names: true
         }
@@ -125,7 +123,7 @@ impl Simulation {
         while self._update_buffer.len() < UPDATE_BUFFER_SIZE {
             let mut bodies = self._update_buffer.back().unwrap_or(&self._bodies).clone();
             bodies.grav_update_positions(Self::DT);
-            bodies.resolve_collisions(self._restitution);
+            bodies.resolve_collisions();
             bodies.grav_update_velocities(Self::DT, self._gravity);
             self._update_buffer.push_back(bodies);
         }
@@ -143,7 +141,6 @@ impl Simulation {
         let mut hasher = DefaultHasher::new();
         (
             self._gravity.to_bits(),
-            self._restitution.to_bits(),
             &self._bodies
         ).hash(&mut hasher);
         hasher.finish()

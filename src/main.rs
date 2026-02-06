@@ -16,7 +16,8 @@ async fn main() {
         acceleration: Vec2::ZERO,
         mass: 20.0,
         radius: 20.0,
-        name: String::from("Earth")
+        name: String::from("Earth"),
+        restitution: 1.
     };
 
     let body2 = body::Body {
@@ -25,7 +26,8 @@ async fn main() {
         acceleration: Vec2::ZERO,
         mass: 2000.0,
         radius: 50.,
-        name: String::from("Sun")
+        name: String::from("Sun"),
+        restitution: 1.
     };
 
     let body3 = body::Body {
@@ -34,7 +36,8 @@ async fn main() {
         acceleration: Vec2::ZERO,
         mass: 5.0,
         radius: 8.0,
-        name: String::from("Mercury")
+        name: String::from("Mercury"),
+        restitution: 1.
     };
 
     set_app_style().await;
