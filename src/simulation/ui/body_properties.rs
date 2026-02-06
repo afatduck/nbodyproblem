@@ -5,7 +5,7 @@ use crate::simulation::Simulation;
 
 static MARGIN: f32 = 20.0;
 static WIDTH: f32 = 300.0;
-static HEIGHT: f32 = 210.0;
+static HEIGHT: f32 = 250.0;
 
 impl Simulation {
     pub fn draw_body_properties(&mut self) {
@@ -15,6 +15,10 @@ impl Simulation {
             self.register_capture_window(&position, &size);
             root_ui().window(hash!(), position, size, |ui| {
                 let body = &mut self._bodies[body_index];
+                ui.separator();
+                ui.editbox(hash!(), vec2(WIDTH, 30.0), &mut body.name);
+                ui.separator();
+
                 ui.label(None, "Position");
 
                 ui.separator();

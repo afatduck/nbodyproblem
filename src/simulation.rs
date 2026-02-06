@@ -28,14 +28,15 @@ pub struct Simulation {
     _speed: f32,
     _gravity: f32,
     _restitution: f32,
-    _trajectory_visibility: TrajectoryVisibility
+    _trajectory_visibility: TrajectoryVisibility,
+    _show_names: bool
 }
 
 impl Simulation {
     pub const DT: f32 = 2e-3;
 
     pub fn new() -> Self {
-        let camera = Camera2D::from_display_rect(
+        let mut camera = Camera2D::from_display_rect(
                 Rect::new(
                     0.0, 
                     0.0, 
@@ -43,6 +44,8 @@ impl Simulation {
                     screen_height()
                 )
             );
+
+        camera.zoom.y = - camera.zoom.y;
 
         Self { 
             _running: false,
@@ -59,7 +62,8 @@ impl Simulation {
             _speed: 1.0,
             _gravity: 1.0,
             _restitution: 1.0,
-            _trajectory_visibility: TrajectoryVisibility::SELECTED
+            _trajectory_visibility: TrajectoryVisibility::SELECTED,
+            _show_names: true
         }
     }
 
@@ -77,7 +81,8 @@ impl Simulation {
         self.draw_trajectories();
         for i in 0..self._bodies.len() {
             self._bodies[i].draw(
-                &self._selected.unwrap_or(usize::MAX) == &i
+                &self._selected.unwrap_or(usize::MAX) == &i, 
+                self._show_names
             );
         }
     }

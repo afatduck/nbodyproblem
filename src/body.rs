@@ -1,8 +1,11 @@
-use macroquad::{color::Color, math::{Vec2, vec2}, shapes::{draw_circle, draw_triangle}, window::{screen_height, screen_width}};
+use macroquad::{color::Color, math::{Vec2, vec2}, shapes::{draw_circle, draw_triangle}, text::{draw_text, measure_text}, window::{screen_height, screen_width}};
 
 pub static COLOR_NORMAL: u32 = 0x225588;
 pub static COLOR_SELECTED: u32 = 0xaa5560;
 static ARROW_DISTANCE_TO_RADIUS: f32 = 1.3;
+static NAME_DISTANCE_TO_RADIUS: f32 = 1.5;
+static FONT_SIZE_TO_RADIUS: f32 = 0.5;
+static MIN_FONT_SIZE: f32 = 14.;
 static RADIUS_MULTIPLIER: f32 = 5e-2;
 static ARROW_WIDTH_TO_RADIUS: f32 = 12.0 * RADIUS_MULTIPLIER;
 static ARROW_HEIGHT_TO_RADIUS: f32 = 8.0 * RADIUS_MULTIPLIER;
@@ -14,6 +17,7 @@ pub struct Body {
     pub acceleration: Vec2,
     pub mass: f32,
     pub radius: f32,
+    pub name: String,
 }
 
 impl std::hash::Hash for Body {
@@ -40,12 +44,22 @@ impl Body {
         draw_triangle(arrow_top, arrow_side1, arrow_side2, Self::COLOR_SELECTED);
     }
 
-    pub fn draw(&self, selected: bool) {
+    fn draw_name(&self, color: Color) {
+        let font_size = MIN_FONT_SIZE.max(self.radius * FONT_SIZE_TO_RADIUS);
+        let text_size = measure_text(&self.name, None, font_size as u16, 1.);
+        let text_pos = self.position - vec2(0.5 * text_size.width, 1. * self.radius * NAME_DISTANCE_TO_RADIUS);
+        draw_text(&self.name, text_pos.x, text_pos.y, font_size, color);
+    }
+
+    pub fn draw(&self, selected: bool, draw_name: bool) {
         let color = if selected { Self::COLOR_SELECTED } else { Self::COLOR_NORMAL };
         let translated_pos = self.position;
         draw_circle(translated_pos.x, translated_pos.y, self.radius, color);
         if selected {
             self.draw_velocity_arrow();
+        }
+        if draw_name {
+            self.draw_name(color);
         }
     }
 }
@@ -57,7 +71,8 @@ impl Default for Body {
             velocity: Default::default(),
             acceleration: Vec2::ZERO,
             mass: 1e2, 
-            radius: 5e1
+            radius: 5e1,
+            name: String::from("untitled body")
         }
     }
 }
