@@ -5,7 +5,7 @@ mod globals;
 mod body_properties;
 mod click_handler;
 mod add_body;
-mod top_swiitches;
+mod top_switches;
 
 impl Simulation {
     pub fn draw_ui(&mut self) {

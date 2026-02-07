@@ -5,7 +5,7 @@ use crate::simulation::Simulation;
 
 static MARGIN: f32 = 20.0;
 static WIDTH: f32 = 300.0;
-static HEIGHT: f32 = 305.0;
+static HEIGHT: f32 = 345.0;
 
 impl Simulation {
     pub fn draw_body_properties(&mut self) {
@@ -68,12 +68,14 @@ impl Simulation {
 
                 ui.separator();
                 ui.label(None, "Restitution");
+                let mut restitution = body.restitution as f32;
                 ui.slider(
                     hash!(), 
                     "Restitution", 
                     0.0..1.0, 
-                    &mut body.restitution
+                    &mut restitution
                 );
+                body.restitution = restitution as f64;
                 ui.separator();
 
                 ui.separator();
@@ -86,7 +88,7 @@ impl Simulation {
                 ui.checkbox(body_index.try_into().unwrap(), "Lock camera", &mut locked);
                 if locked != prev_locked {
                     self._camera_lock = if locked {
-                        self._camera.target = body.position;
+                        self._camera.target = vec2(body.position.x as f32, body.position.y as f32);
                         Some(body_index)
                     } else { None };
                 }
@@ -103,32 +105,36 @@ impl Simulation {
                     ui.push_skin(&skin);
                 }
 
+                ui.separator();
+                ui.label(None, "Mass is in solar mass units.");
+                ui.separator();
+                ui.label(None, "Distance is in astronomical units.");
+
                 if self._running { return; }
 
-                if let Ok(px) = position_x.parse::<f32>() {
+                if let Ok(px) = position_x.parse::<f64>() {
                     body.position.x = px;
                 }
 
-                if let Ok(py) = position_y.parse::<f32>() {
+                if let Ok(py) = position_y.parse::<f64>() {
                     body.position.y = py;
                 }
 
-                if let Ok(vx) = velocity_x.parse::<f32>() {
+                if let Ok(vx) = velocity_x.parse::<f64>() {
                     body.velocity.x = vx;
                 }
 
-                if let Ok(vy) = velocity_y.parse::<f32>() {
+                if let Ok(vy) = velocity_y.parse::<f64>() {
                     body.velocity.y = vy;
                 }
 
-                if let Ok(m) = mass.parse::<f32>() {
+                if let Ok(m) = mass.parse::<f64>() {
                     body.mass = m;
                 }
 
-                if let Ok(r) = radius.parse::<f32>() {
+                if let Ok(r) = radius.parse::<f64>() {
                     body.radius = r;
                 }
-                
 
             });
         }

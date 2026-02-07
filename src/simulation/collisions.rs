@@ -14,7 +14,7 @@ impl CollsisionSimulation for Vec<Body> {
                 let body_b = &self[j];
 
                 let distance = body_a.position.distance(body_b.position);
-                if  body_a.radius + body_b.radius > distance {
+                if body_a.radius + body_b.radius > distance {
                     return  true;
                 }
             }
