@@ -21,6 +21,7 @@ pub struct Simulation {
     _param_hash: u64,
     _update_buffer: VecDeque<Vec<Body>>,
     _time: f64,
+    _timer: f32,
     _camera: Camera2D,
     _drag_start_position: Option<Vec2>,
     _scale_interpolation: Option<ScaleInterpolation>,
@@ -56,6 +57,7 @@ impl Simulation {
             _update_buffer: VecDeque::new(),
             _param_hash: 0,
             _time: 0.0,
+            _timer: 0.0,
             _camera: camera,
             _scale_interpolation: None,
             _drag_start_position: None,
@@ -107,7 +109,10 @@ impl Simulation {
         self.draw();
         set_default_camera();
 
-        self.update_bodies(frame_time);
+        if self._running {
+            self.update_bodies(frame_time);
+            self._timer += frame_time * self._speed as f32;
+        }
 
         if let Some(lock_index) = self._camera_lock {
             let position = self.visual_position(self._bodies[lock_index].position);
@@ -120,12 +125,10 @@ impl Simulation {
     }
 
     fn update_bodies(&mut self, frame_time: f32) {
-        if self._running {
-            self._time += frame_time as f64 * self._speed * 0.01;
-            while self._time >= Self::DT {
-                self._time -= Self::DT;
-                self._bodies = self._update_buffer.pop_front().unwrap_or(self._bodies.clone());
-            }
+        self._time += frame_time as f64 * self._speed * 0.01;
+        while self._time >= Self::DT {
+            self._time -= Self::DT;
+            self._bodies = self._update_buffer.pop_front().unwrap_or(self._bodies.clone());
         }
     }
 
